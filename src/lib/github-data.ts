@@ -44,6 +44,8 @@ export type Project = {
   highlights?: string[];
   /** App Store / Play Store / brand-logo URL */
   logoUrl?: string;
+  /** Full-bleed banner image used as showreel background (overrides gradient) */
+  bannerUrl?: string;
   /** Short one-liner from the listing (used under the logo) */
   tagline?: string;
   /** Star rating from the store listing */
@@ -67,6 +69,7 @@ export const projects: Project[] = [
     highlights: ["GST + HSN/SAC", "Bulk PDF export", "Webhook order sync"],
     logoUrl:
       "https://cdn.shopify.com/app-store/listing_images/f91cb213006ab6fb5448b00b9a44c33c/icon/COj2oqi2iYsDEAE=.png",
+    bannerUrl: "/banners/indian-gst-invoice.png",
     tagline:
       "Auto CGST/SGST/IGST split. HSN codes per variant. Branded PDF invoices for Indian stores.",
     rating: "5.0",
@@ -86,6 +89,7 @@ export const projects: Project[] = [
     highlights: ["Variant grouping", "Color swatches", "Polaris UI"],
     logoUrl:
       "https://cdn.shopify.com/app-store/listing_images/7c3a53ccdda76f3a6375e187445438e7/icon/CNPp_rKjzo8DEAE=.png",
+    bannerUrl: "/banners/uvs-app.png",
     tagline: "Custom swatches & linked products for smarter shopping.",
     rating: "5.0",
     appStore: true,
@@ -125,6 +129,7 @@ export const projects: Project[] = [
     highlights: ["Native Android", "Phone + Email OTP", "Onboarding flow", "Shopify Storefront API"],
     logoUrl:
       "https://play-lh.googleusercontent.com/lThc5CQ3MVRNarlq60ZDuUMQWlqwk0hrZtBrHBO21wZLPRNk2HBqvOMbPMSAP5WG6-E_L-y0a7fg1LL8Coet6A=w240-h240",
+    bannerUrl: "/banners/ableys.png",
     tagline:
       "All Things Sensory — find, customize, and purchase sensory products tailored to your child's needs.",
     playStore: true,
@@ -142,6 +147,8 @@ export const projects: Project[] = [
     solves:
       "Luxury brands need a fully bespoke product experience and editorial storytelling that Shopify themes can't deliver — without losing the Shopify backend.",
     highlights: ["Hydrogen SSR", "PayU Breeze checkout", "GSAP motion"],
+    bannerUrl: "/banners/pyko.png",
+    tagline: "Made for Momentum — for wrists that chase what's next.",
   },
   {
     name: "The Wouff",
@@ -160,13 +167,15 @@ export const projects: Project[] = [
   {
     name: "Soulmaed",
     category: "theme",
-    client: "Lifestyle Brand",
+    client: "Sustainable Fashion",
     year: "2025",
     url: "https://www.soulmaed.com/",
     stack: ["Shopify", "Liquid", "Tailwind"],
-    description: "Custom Shopify theme — lifestyle & wellness brand.",
+    description: "Custom Shopify theme — sustainable fashion brand with editorial storytelling.",
     solves:
-      "Off-the-shelf themes can't deliver brand-specific storytelling, on-brand PDPs, or conversion-tuned collection layouts.",
+      "Off-the-shelf themes can't deliver brand-specific storytelling, editorial product pages, or the conversion-tuned collection layouts the brand needed for its sustainability narrative.",
+    bannerUrl: "/banners/soulmaed.png",
+    tagline: "Nature's Fingerprint — every weave is a story of our Earth.",
   },
   {
     name: "Elephant Racquet Club",
@@ -201,6 +210,19 @@ export const projects: Project[] = [
     solves:
       "Apparel brand needed a fast, conversion-focused storefront with custom collections and editorial product pages.",
   },
+  {
+    name: "THRDCULT",
+    category: "theme",
+    client: "Streetwear",
+    year: "2025",
+    url: "https://thrdcult.com/",
+    stack: ["Shopify", "Liquid", "Tailwind"],
+    description: "Custom Shopify theme — streetwear brand with editorial drop launches.",
+    solves:
+      "Streetwear brand needed a culture-first storefront with drop-style launches, lookbook-heavy collections, and a distinctive identity that themes off the store can't deliver.",
+    bannerUrl: "/banners/thrdcult.png",
+    tagline: "Born from the cracks of culture — for the misfits, the in-betweeners.",
+  },
 
   // ── Custom full-stack builds (Next.js + Node + Mongo) ──────────────────
   {
@@ -215,6 +237,8 @@ export const projects: Project[] = [
     solves:
       "Shopify can't natively run radius-based serviceability + 10-30 min hyperlocal fulfillment. We rebuilt the storefront as a quick-delivery custom app with its own admin dashboard, Shiprocket Hyperlocal integration, and pincode/radius filters.",
     highlights: ["Pincode + radius filter", "Quick-ship orchestration", "Dedicated admin", "Shiprocket Hyperlocal"],
+    bannerUrl: "/banners/supplemart-express.png",
+    tagline: "Quick-ship in 60–75 min · Pincode + radius serviceability with a dedicated admin.",
   },
   {
     name: "GoHyperLocal",
@@ -256,7 +280,7 @@ export type CaseStudy = (typeof projects)[number];
 
 export const caseStudies: CaseStudy[] = [
   projects.find((p) => p.name === "PYKO")!,
-  projects.find((p) => p.name === "The Wouff")!,
+  projects.find((p) => p.name === "Soulmaed")!,
   projects.find((p) => p.name === "Express Supplemart")!,
   projects.find((p) => p.name === "Abley's")!,
   projects.find((p) => p.name === "Ultimate Variants & Swatches")!,

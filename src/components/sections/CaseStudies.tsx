@@ -1,110 +1,107 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { caseStudies, CATEGORY_LABELS } from "@/lib/github-data";
+import { Reveal } from "@/components/Reveal";
+import { caseStudies, CATEGORY_LABELS, type Project } from "@/lib/github-data";
 import { ArrowUpRight, Star } from "lucide-react";
 import { SiShopify, SiGoogleplay } from "react-icons/si";
 
 const FEATURED = caseStudies;
 
-const gradients = [
-  "linear-gradient(135deg, oklch(0.45 0.25 25), oklch(0.2 0.18 30) 60%, oklch(0.04 0 0))",
+const fallbackGradients = [
+  "linear-gradient(135deg, oklch(0.45 0.25 25), oklch(0.18 0.18 30) 60%, oklch(0.04 0 0))",
   "linear-gradient(135deg, oklch(0.5 0.28 264), oklch(0.18 0.18 264) 60%, oklch(0.04 0 0))",
   "linear-gradient(135deg, oklch(0.55 0.2 145), oklch(0.18 0.12 160) 60%, oklch(0.04 0 0))",
-  "linear-gradient(135deg, oklch(0.6 0.22 60), oklch(0.2 0.14 50) 60%, oklch(0.04 0 0))",
+  "linear-gradient(135deg, oklch(0.6 0.22 60), oklch(0.18 0.14 50) 60%, oklch(0.04 0 0))",
   "linear-gradient(135deg, oklch(0.55 0.22 320), oklch(0.18 0.16 320) 60%, oklch(0.04 0 0))",
   "linear-gradient(135deg, oklch(0.5 0.18 200), oklch(0.16 0.12 220) 60%, oklch(0.04 0 0))",
 ];
 
-export function CaseStudies() {
-  const [idx, setIdx] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const rafRef = useRef<number | null>(null);
-  const startRef = useRef<number>(0);
-  const DURATION = 5500;
+// Asymmetric bento layout on lg+: 1 hero (8/12) + 1 tall (4/12) + 4 medium (6/12 each)
+const CARD_SPANS = [
+  "lg:col-span-8",
+  "lg:col-span-4",
+  "lg:col-span-6",
+  "lg:col-span-6",
+  "lg:col-span-6",
+  "lg:col-span-6",
+];
 
-  useEffect(() => {
-    startRef.current = performance.now();
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - startRef.current) / DURATION);
-      setProgress(p);
-      if (p >= 1) {
-        setIdx((i) => (i + 1) % FEATURED.length);
-        startRef.current = performance.now();
-      }
-      rafRef.current = requestAnimationFrame(tick);
-    };
-    rafRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
+const CARD_HEIGHTS = [
+  "min-h-[420px] sm:min-h-[480px] lg:min-h-[560px]", // hero
+  "min-h-[360px] sm:min-h-[420px] lg:min-h-[560px]", // tall side
+  "min-h-[360px] sm:min-h-[400px] lg:min-h-[420px]",
+  "min-h-[360px] sm:min-h-[400px] lg:min-h-[420px]",
+  "min-h-[360px] sm:min-h-[400px] lg:min-h-[420px]",
+  "min-h-[360px] sm:min-h-[400px] lg:min-h-[420px]",
+];
 
-  const goto = (i: number) => {
-    setIdx(i);
-    startRef.current = performance.now();
-    setProgress(0);
-  };
-
-  const project = FEATURED[idx];
+function CaseCard({
+  project,
+  index,
+  className = "",
+}: {
+  project: Project;
+  index: number;
+  className?: string;
+}) {
   const headline = (project.shortName ?? project.name).toUpperCase();
+  const isHero = index === 0;
 
   return (
-    <section
-      id="case-studies"
-      className="relative h-[100svh] min-h-[640px] w-full overflow-hidden border-y border-border"
+    <a
+      href={project.url}
+      target="_blank"
+      rel="noreferrer"
+      className={`group relative isolate flex flex-col overflow-hidden border border-border bg-card transition-colors duration-300 hover:border-brand ${className}`}
     >
-      {FEATURED.map((p, i) => (
-        <div
-          key={p.name}
-          aria-hidden
-          className="absolute inset-0 transition-opacity duration-1000 ease-out"
-          style={{
-            background: gradients[i % gradients.length],
-            opacity: i === idx ? 1 : 0,
-          }}
-        />
-      ))}
+      {/* Background: banner or gradient fallback */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,oklch(0_0_0/0.55)_70%,oklch(0_0_0/0.85)_100%)]"
+        className="absolute inset-0"
+        style={{ background: fallbackGradients[index % fallbackGradients.length] }}
+      />
+      {project.bannerUrl && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={project.bannerUrl}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+          loading="lazy"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = "none";
+          }}
+        />
+      )}
+
+      {/* Dark gradient overlay (stronger at bottom for legibility) */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,oklch(0_0_0/0.35)_0%,oklch(0_0_0/0.15)_35%,oklch(0_0_0/0.55)_70%,oklch(0_0_0/0.92)_100%)] transition-opacity duration-300 group-hover:opacity-95"
       />
 
-      <div className="absolute inset-x-0 top-6 z-10 hidden border-b border-white/10 md:block">
-        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-8 py-3 font-mono text-[10px] uppercase tracking-[0.22em] text-white/70">
-          <span>Case Studies / Showreel</span>
-          <span>
-            {String(idx + 1).padStart(2, "0")} / {String(FEATURED.length).padStart(2, "0")}
-          </span>
-          <span>Index — Featured</span>
-        </div>
-      </div>
-
-      <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col justify-end px-4 pb-28 pt-24 sm:px-5 md:px-8 md:pb-40 md:pt-32">
-        {/* App logo + store badge — keyed by name so it animates on slide change */}
-        <div
-          key={`logo-${project.name}`}
-          className="mb-5 flex items-center gap-3 animate-[heroIn_700ms_cubic-bezier(0.2,0.8,0.2,1)_both] sm:gap-4 md:mb-6"
-        >
+      {/* Top strip: app icon + store badge ▸ on left, serial + arrow ▸ on right */}
+      <div className="relative z-10 flex items-start justify-between gap-3 p-5 md:p-6">
+        <div className="flex items-center gap-2.5">
           {project.logoUrl && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={project.logoUrl}
               alt={`${project.name} logo`}
-              width={72}
-              height={72}
-              className="h-12 w-12 shrink-0 rounded-[6px] border border-white/15 bg-white/5 object-cover backdrop-blur-sm sm:h-16 sm:w-16 md:h-[72px] md:w-[72px]"
-              loading="eager"
+              width={48}
+              height={48}
+              className="h-10 w-10 shrink-0 rounded-[6px] border border-white/20 bg-white/10 object-cover backdrop-blur-sm md:h-12 md:w-12"
+              loading="lazy"
             />
           )}
-          <div className="flex min-w-0 flex-col gap-1 sm:gap-1.5">
+          <div className="flex flex-col gap-1">
             {project.appStore && (
-              <span className="flex flex-wrap items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white sm:text-[10px]">
-                <SiShopify className="h-3 w-3 shrink-0 text-brand sm:h-3.5 sm:w-3.5" />
+              <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white sm:text-[10px]">
+                <SiShopify className="h-3 w-3 shrink-0 text-brand" />
                 Shopify App Store
                 {project.rating && (
                   <>
-                    <span className="mx-1 hidden h-1 w-1 rounded-full bg-white/40 sm:inline-block" />
+                    <span className="mx-0.5 hidden h-1 w-1 rounded-full bg-white/40 sm:inline-block" />
                     <Star className="h-3 w-3 shrink-0 fill-current text-brand" />
                     {project.rating}
                   </>
@@ -113,81 +110,95 @@ export function CaseStudies() {
             )}
             {project.playStore && (
               <span className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white sm:text-[10px]">
-                <SiGoogleplay className="h-3 w-3 shrink-0 text-brand sm:h-3.5 sm:w-3.5" />
+                <SiGoogleplay className="h-3 w-3 shrink-0 text-brand" />
                 Google Play
               </span>
             )}
-            <span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[9px] uppercase tracking-[0.22em] text-white/70 sm:text-[10px]">
-              <span>{CATEGORY_LABELS[project.category]}</span>
-              <span className="hidden text-white/30 sm:inline">/</span>
-              <span>
-                {project.client} · {project.year}
-              </span>
-              <span className="hidden text-white/30 md:inline">/</span>
-              <span className="hidden md:inline">{project.stack.slice(0, 3).join(" · ")}</span>
-            </span>
           </div>
         </div>
 
-        <div key={`name-${project.name}`} className="overflow-hidden">
-          <h2 className="display-massive animate-[heroIn_900ms_cubic-bezier(0.2,0.8,0.2,1)_both] break-words text-[clamp(2.25rem,11vw,14rem)] text-white">
-            {headline}
-          </h2>
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/70 sm:text-[11px]">
+            {String(index + 1).padStart(2, "0")} / {String(FEATURED.length).padStart(2, "0")}
+          </span>
+          <span className="flex h-9 w-9 items-center justify-center border border-white/25 bg-white/5 text-white backdrop-blur-sm transition-all group-hover:border-brand group-hover:bg-brand">
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </span>
         </div>
+      </div>
 
-        <div className="mt-8 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-          <p className="max-w-md text-sm leading-relaxed text-white/80 md:text-base">
+      {/* Spacer to push content to bottom */}
+      <div className="relative z-10 flex-1" />
+
+      {/* Bottom: project name + meta + tagline */}
+      <div className="relative z-10 p-5 md:p-6 lg:p-7">
+        <h3
+          className={`display-massive break-words text-white ${
+            isHero
+              ? "text-[clamp(2.5rem,7vw,6rem)]"
+              : "text-[clamp(2rem,4.5vw,4rem)]"
+          }`}
+        >
+          {headline}
+        </h3>
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[9px] uppercase tracking-[0.22em] text-white/70 sm:text-[10px]">
+          <span>{CATEGORY_LABELS[project.category]}</span>
+          <span className="text-white/30">·</span>
+          <span>
+            {project.client} · {project.year}
+          </span>
+        </div>
+        {(project.tagline || project.description) && (
+          <p className={`mt-3 max-w-xl text-sm leading-relaxed text-white/80 ${isHero ? "md:text-base" : ""}`}>
             {project.tagline ?? project.description}
           </p>
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noreferrer"
-            className="group inline-flex items-center gap-3 border border-white/30 bg-white/5 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.22em] text-white backdrop-blur-sm transition-all hover:border-white hover:bg-white hover:text-black"
-          >
-            Visit Live
-            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-          </a>
-        </div>
+        )}
       </div>
+    </a>
+  );
+}
 
-      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-white/15 bg-black/30 backdrop-blur-sm">
-        <div className="mx-auto max-w-[1600px] px-5 py-4 md:px-8">
-          <div className="flex items-center gap-3">
-            {FEATURED.map((p, i) => (
-              <button
-                key={p.name}
-                onClick={() => goto(i)}
-                className="group relative flex-1"
-                aria-label={p.name}
-              >
-                <div className="h-[2px] w-full bg-white/15">
-                  <div
-                    className="h-full bg-brand"
-                    style={{
-                      width: i < idx ? "100%" : i === idx ? `${progress * 100}%` : "0%",
-                      transition: i === idx ? "width 100ms linear" : "none",
-                    }}
-                  />
-                </div>
-                <div className="mt-2 hidden items-center justify-between font-mono text-[10px] uppercase tracking-[0.18em] md:flex">
-                  <span
-                    className={
-                      i === idx
-                        ? "text-white"
-                        : "text-white/40 group-hover:text-white/70"
-                    }
-                  >
-                    {String(i + 1).padStart(2, "0")} — {p.shortName ?? p.name}
-                  </span>
-                </div>
-              </button>
-            ))}
+export function CaseStudies() {
+  return (
+    <section
+      id="case-studies"
+      className="relative border-y border-border py-20 md:py-28 lg:py-32"
+    >
+      <div className="mx-auto max-w-[1600px] px-5 md:px-8">
+        {/* Header */}
+        <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-6 border-b border-border pb-8 md:mb-14">
+          <div className="flex items-baseline gap-3 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+            <span className="text-brand">[01]</span>
+            <span>Selected Work</span>
+            <span className="text-brand">[{String(FEATURED.length).padStart(2, "0")}]</span>
           </div>
-        </div>
-      </div>
+          <h2 className="display-massive break-words text-[clamp(2.25rem,8vw,7rem)]">
+            Selected <br />
+            <span className="font-serif italic font-normal text-brand">work</span>.
+          </h2>
+        </Reveal>
 
-      <style>{`@keyframes heroIn { 0% { transform: translateY(110%); opacity: 0;} 100% { transform: translateY(0); opacity: 1;} }`}</style>
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-12 lg:gap-5">
+          {FEATURED.map((p, i) => (
+            <Reveal
+              key={p.name}
+              delay={i * 0.06}
+              className={`${CARD_SPANS[i] ?? "lg:col-span-6"} ${CARD_HEIGHTS[i] ?? "min-h-[400px]"} flex`}
+            >
+              <CaseCard project={p} index={i} className="flex-1" />
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Footer CTA */}
+        <Reveal className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-8 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground md:mt-14">
+          <span>More live work in Portfolio below</span>
+          <a href="#projects" className="text-foreground hover:text-brand">
+            See all projects →
+          </a>
+        </Reveal>
+      </div>
     </section>
   );
 }
