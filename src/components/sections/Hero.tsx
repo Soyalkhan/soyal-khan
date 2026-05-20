@@ -13,8 +13,16 @@ import {
   SiMongodb,
   SiTailwindcss,
 } from "react-icons/si";
+import { gsap } from "gsap";
 import { GithubIcon, LinkedinIcon } from "@/components/BrandIcons";
 import { profile } from "@/lib/github-data";
+
+const ROLES = [
+  "Full-Stack Engineer",
+  "Shopify Developer",
+  "Software Engineer",
+  "E-Commerce & D2C Expert",
+];
 
 type IconCmp = ComponentType<SVGProps<SVGSVGElement>>;
 
@@ -32,9 +40,39 @@ const TECH: { label: string; Icon: IconCmp; x: number; y: number; d: number }[] 
 
 export function Hero() {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const roleRef = useRef<HTMLSpanElement>(null);
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [scrollY, setScrollY] = useState(0);
   const [dl, setDl] = useState<{ pct: number; active: boolean }>({ pct: 0, active: false });
+
+  // Slot-machine roll-up of role labels — clean translate-only animation
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const el = roleRef.current;
+    if (!el) return;
+
+    let idx = 0;
+    let cancelled = false;
+
+    const rollTo = (target: string) => {
+      if (cancelled || !el) return;
+      const tl = gsap.timeline({ defaults: { force3D: true } });
+      tl.to(el, { yPercent: -110, duration: 0.4, ease: "power3.in" });
+      tl.set(el, { yPercent: 110, textContent: target });
+      tl.to(el, { yPercent: 0, duration: 0.55, ease: "power3.out" });
+    };
+
+    const interval = window.setInterval(() => {
+      idx = (idx + 1) % ROLES.length;
+      rollTo(ROLES[idx]);
+    }, 2800);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -135,15 +173,32 @@ export function Hero() {
             <span className="text-brand">→</span>&nbsp; Soyal Khan
           </p>
           <h1
-            className="reveal-up display-massive mt-5 text-[clamp(2.25rem,7.2vw,6rem)] leading-[0.95]"
+            className="reveal-up display-massive mt-5 break-words text-[clamp(2.25rem,7.2vw,6rem)] leading-[0.95]"
             style={{ animationDelay: "0.25s" }}
           >
-            Full-Stack <span className="font-serif italic font-normal text-brand">Engineer</span>
+            Make Commerce{" "}
+            <span className="font-serif italic font-normal text-brand">Better</span>
           </h1>
 
           <div
+            className="reveal-up mt-7 flex items-center justify-center gap-3 sm:gap-4"
+            style={{ animationDelay: "0.45s" }}
+          >
+            <span className="h-px w-8 bg-foreground/30 sm:w-12" />
+            <div className="overflow-hidden py-1">
+              <span
+                ref={roleRef}
+                className="block font-mono text-[11px] uppercase tracking-[0.28em] text-foreground will-change-transform sm:text-xs sm:tracking-[0.3em]"
+              >
+                {ROLES[0]}
+              </span>
+            </div>
+            <span className="h-px w-8 bg-foreground/30 sm:w-12" />
+          </div>
+
+          <div
             className="reveal-up mt-8 flex flex-wrap items-center justify-center gap-3"
-            style={{ animationDelay: "0.5s" }}
+            style={{ animationDelay: "0.6s" }}
           >
             <button
               onClick={downloadCV}
@@ -192,7 +247,7 @@ export function Hero() {
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/portrait.png"
+            src="/my/mine.png"
             alt="Soyal Khan"
             width={520}
             height={520}

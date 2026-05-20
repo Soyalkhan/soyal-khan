@@ -8,7 +8,6 @@ const STAT_ROW = [
   { k: "Shopify stores shipped", v: stats.storesShipped },
   { k: "Custom themes built", v: stats.themesBuilt },
   { k: "Ongoing projects", v: stats.ongoing },
-  { k: "Team size", v: stats.team },
   { k: "Hourly rate", v: stats.hourlyRate },
 ];
 
@@ -53,9 +52,12 @@ export function Services() {
         </Reveal>
 
         {/* Stat row */}
-        <Reveal className="mt-12 grid grid-cols-2 gap-px bg-border sm:grid-cols-3 md:mt-14 md:grid-cols-5">
+        <Reveal className="mt-12 grid grid-cols-2 gap-px bg-border md:mt-14 md:grid-cols-4">
           {STAT_ROW.map((s) => (
-            <div key={s.k} className="bg-background p-4 sm:p-5 md:p-6">
+            <div
+              key={s.k}
+              className="flex flex-col items-center justify-center bg-background p-4 text-center sm:p-5 md:p-6"
+            >
               <div className="font-display text-2xl leading-none sm:text-3xl md:text-4xl">{s.v}</div>
               <div className="mt-2.5 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground sm:text-[10px]">
                 {s.k}

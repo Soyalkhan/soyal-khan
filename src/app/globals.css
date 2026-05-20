@@ -7,7 +7,7 @@
   --font-display: var(--font-bricolage), "Inter", system-ui, sans-serif;
   --font-serif: var(--font-instrument), "Times New Roman", serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-mono: var(--font-mono-display), ui-monospace, monospace;
 
   --radius-sm: 2px;
   --radius-md: 2px;

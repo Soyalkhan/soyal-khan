@@ -15,7 +15,7 @@ Format: `.png` (current convention). Change `bannerUrl` in
 | Soulmaed             | `soulmaed.png`                    | ✅ in    |
 | Express Supplemart   | `supplemart-express.png`          | ✅ in    |
 | THRDCULT             | `thrdcult.png`                    | ✅ in    |
-| Abley's              | `ableys.png`                      | ⏳ TODO   |
+| Abley's              | `ableys.png`                      | ✅ in    |
 | UVS App              | `uvs-app.png` *(optional)*        | —        |
 | Indian GST Invoice   | `indian-gst-invoice.png` *(opt.)* | —        |
 

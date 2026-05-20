@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono, Instrument_Serif, Inter } from "next/font/google";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -24,10 +24,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
-  variable: "--font-jetbrains",
+  variable: "--font-mono-display",
   display: "swap",
 });
 
@@ -60,7 +60,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bricolage.variable} ${instrument.variable} ${inter.variable} ${jetbrains.variable}`}
+      className={`${bricolage.variable} ${instrument.variable} ${inter.variable} ${geistMono.variable}`}
     >
       <body className="bg-background text-foreground antialiased">{children}</body>
     </html>
