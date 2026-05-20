@@ -237,12 +237,22 @@ export function Hero() {
             transition: "transform 200ms cubic-bezier(.2,.8,.2,1)",
           }}
         >
+          {/* Soft ambient backdrop behind the silhouette */}
           <div
             aria-hidden
-            className="absolute inset-x-0 -bottom-10 mx-auto h-40 w-[90%] rounded-full blur-3xl"
+            className="absolute inset-0 m-auto h-[85%] w-[75%] rounded-full blur-3xl"
             style={{
               background:
-                "radial-gradient(ellipse, oklch(0.5 0.28 264 / 0.55), transparent 70%)",
+                "radial-gradient(ellipse, oklch(0 0 0 / 0.35), transparent 70%)",
+            }}
+          />
+          {/* Subtle brand-blue plinth glow at base */}
+          <div
+            aria-hidden
+            className="absolute inset-x-0 -bottom-8 mx-auto h-32 w-[80%] rounded-full blur-3xl"
+            style={{
+              background:
+                "radial-gradient(ellipse, oklch(0.5 0.28 264 / 0.22), transparent 70%)",
             }}
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -253,7 +263,7 @@ export function Hero() {
             height={520}
             className="reveal-portrait relative h-[44vh] max-h-[560px] min-h-[320px] w-auto select-none object-contain object-bottom"
             draggable={false}
-            style={{ filter: "drop-shadow(0 25px 60px oklch(0 0 0 / 0.5))" }}
+            style={{ filter: "drop-shadow(0 15px 35px oklch(0 0 0 / 0.3))" }}
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src = profile.avatar;
             }}

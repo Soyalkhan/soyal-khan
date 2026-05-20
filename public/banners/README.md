@@ -16,8 +16,8 @@ Format: `.png` (current convention). Change `bannerUrl` in
 | Express Supplemart   | `supplemart-express.png`          | ✅ in    |
 | THRDCULT             | `thrdcult.png`                    | ✅ in    |
 | Abley's              | `ableys.png`                      | ✅ in    |
-| UVS App              | `uvs-app.png` *(optional)*        | —        |
-| Indian GST Invoice   | `indian-gst-invoice.png` *(opt.)* | —        |
+| UVS App              | `uvs-app.png`                     | ✅ in    |
+| Indian GST Invoice   | `indian-gst-invoice.png`          | ✅ in    |
 
 The dark vertical overlay + radial vignette on the showreel keeps the foreground
 text legible over any banner — you don't need to dim or darken the screenshots

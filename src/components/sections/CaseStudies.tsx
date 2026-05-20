@@ -74,10 +74,15 @@ function CaseCard({
         />
       )}
 
-      {/* Dark gradient overlay (stronger at bottom for legibility) */}
+      {/* Universal flat tint so text always reads against any banner */}
       <div
         aria-hidden
-        className="absolute inset-0 bg-[linear-gradient(to_bottom,oklch(0_0_0/0.35)_0%,oklch(0_0_0/0.15)_35%,oklch(0_0_0/0.55)_70%,oklch(0_0_0/0.92)_100%)] transition-opacity duration-300 group-hover:opacity-95"
+        className="absolute inset-0 bg-black/40 transition-opacity duration-300 group-hover:bg-black/30"
+      />
+      {/* Vertical gradient — heavier at top + bottom where text sits */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,oklch(0_0_0/0.55)_0%,oklch(0_0_0/0.25)_40%,oklch(0_0_0/0.65)_70%,oklch(0_0_0/0.95)_100%)]"
       />
 
       {/* Top strip: app icon + store badge ▸ on left, serial + arrow ▸ on right */}

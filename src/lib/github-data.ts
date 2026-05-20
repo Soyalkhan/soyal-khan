@@ -243,13 +243,34 @@ export const projects: Project[] = [
   {
     name: "GoHyperLocal",
     category: "custom-dev",
-    client: "Hyperlocal Commerce",
+    client: "Quick-Commerce SaaS · Made in India",
     year: "2025",
     url: "https://gohyperlocal-frontend.vercel.app/",
-    stack: ["Next.js", "Node", "MongoDB"],
-    description: "Hyperlocal commerce platform — frontend + backend + admin.",
+    stack: [
+      "React",
+      "Node",
+      "Shiprocket API",
+      "Vite",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Express",
+      "MongoDB",
+      "AWS",
+      "Cloudflare",
+      "Delhivery + Bluedart",
+      "Google Maps",
+      "Redis",
+    ],
+    description:
+      "Quick-commerce SaaS for Indian D2C stores — plug it onto your storefront and ship Blinkit-style fast delivery. Multi-courier (Shiprocket / Delhivery / Bluedart), geo-zoned serviceability, multi-tenant admin. Made in India, for India.",
     solves:
-      "Local commerce brands need radius-based serviceability, real-time order flow, and admin tooling — full-stack build, not a plugin.",
+      "Indian D2C brands can't natively run 10–30 min hyperlocal delivery across multiple couriers with geo-zone serviceability — needs a full backend, a zone engine, and courier orchestration, not a plugin.",
+    highlights: [
+      "Zone engine",
+      "Multi-tenant SaaS",
+      "Multi-courier routing",
+      "Made in India, for India",
+    ],
   },
   {
     name: "SuriFresh Extract",
@@ -257,21 +278,40 @@ export const projects: Project[] = [
     client: "Fresh Produce D2C",
     year: "2025",
     url: "https://surifreshextract.com/",
-    stack: ["Next.js", "Node", "MongoDB"],
-    description: "Cold-pressed juice / fresh produce storefront with custom backend.",
+    stack: ["React", "Vite", "Tailwind CSS"],
+    description: "Cold-pressed juice / fresh produce storefront — React + Vite + Tailwind.",
     solves:
       "Fresh-produce D2C brand needed subscription + delivery scheduling that off-the-shelf platforms don't support.",
   },
   {
     name: "BookMyCab",
     category: "custom-dev",
-    client: "Cab Booking Platform",
+    client: "Cab Booking Platform · Multi-Operator SaaS",
     year: "2025",
     url: "https://bookmycab.co",
-    stack: ["Next.js", "Node", "MongoDB"],
-    description: "Cab booking platform — real-time ride flow, dispatcher admin.",
+    stack: [
+      "React",
+      "Node",
+      "Google Maps API",
+      "Vite",
+      "Tailwind CSS",
+      "Express",
+      "AWS",
+      "Cloudflare",
+      "MongoDB Atlas",
+      "Razorpay",
+      "Twilio",
+    ],
+    description:
+      "Cab booking platform — multi-operator SaaS that any local cab operator can launch under their own brand. Live Google Maps, real-time ride flow, dispatcher admin, fare engine. React + Vite on Cloudflare; Node on AWS; MongoDB Atlas for storage.",
     solves:
-      "Operator needed transparent customer-facing booking with own driver/dispatcher management — not viable on third-party SaaS.",
+      "Local cab operators can't ship their own customer-facing booking on top of Uber/Ola — and they don't want to give up margins or driver ownership to a third-party SaaS. BookMyCab is a multi-tenant platform any operator can launch under their own brand with their own drivers, dispatchers, and fare rules.",
+    highlights: [
+      "Multi-operator SaaS",
+      "Live Maps + dispatcher",
+      "Fare + zone engine",
+      "Cloudflare edge",
+    ],
   },
 ];
 
@@ -320,7 +360,6 @@ export const services: Service[] = [
     pitch:
       "Full-stack product (web + mobile apps) shipped end-to-end — same flat rate for every brand, no surprise pricing.",
     bullets: ["Web app", "iOS + Android", "Backend + admin"],
-    price: "Under ₹75K",
   },
   {
     title: "Custom Shopify Features",
@@ -333,6 +372,12 @@ export const services: Service[] = [
     pitch:
       "5+ developers, 5+ yrs client experience. I solve roughly 90% of typical brand engineering issues end-to-end.",
     bullets: ["Team of 5+", "5+ yrs experience", "End-to-end ownership"],
+  },
+  {
+    title: "Headless Storefront Build",
+    pitch:
+      "For brands ready to outgrow Shopify themes. Hydrogen + Remix SSR storefronts with Storefront GraphQL, custom checkout, and motion-led UX — Shopify stays as the source of truth.",
+    bullets: ["Hydrogen SSR", "Storefront GraphQL", "Motion + checkout"],
   },
 ];
 
@@ -350,11 +395,38 @@ export const partners: Partner[] = [
 ];
 
 export const skills = [
-  { group: "Frontend", items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "GSAP"] },
-  { group: "Backend", items: ["Node.js", "Express", "REST APIs", "JWT Auth", "Webhooks"] },
-  { group: "Commerce", items: ["Shopify", "Hydrogen", "Remix", "Storefront API", "Polaris", "Liquid"] },
-  { group: "Database", items: ["MongoDB", "PostgreSQL", "Mongoose"] },
-  { group: "Infra", items: ["Vercel", "AWS", "Fly.io", "Git"] },
+  {
+    group: "Frontend",
+    items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Liquid", "Framer Motion", "GSAP"],
+  },
+  {
+    group: "Backend",
+    items: ["Node.js", "Express", "Python", "REST APIs", "GraphQL", "Webhooks", "JWT / OAuth"],
+  },
+  {
+    group: "Commerce",
+    items: ["Shopify", "Hydrogen", "Remix", "Storefront API", "Admin API", "Polaris"],
+  },
+  {
+    group: "Database",
+    items: ["MongoDB", "PostgreSQL", "Supabase", "Mongoose"],
+  },
+  {
+    group: "Cloud",
+    items: ["AWS", "EC2", "S3", "Cloudflare", "Vercel", "Fly.io"],
+  },
+  {
+    group: "DevOps",
+    items: ["Docker", "Git", "GitHub Actions", "CI / CD"],
+  },
+  {
+    group: "Integrations",
+    items: ["Twilio", "SMTP", "OAuth2", "Razorpay", "PayU Breeze", "Shiprocket"],
+  },
+  {
+    group: "System Design",
+    items: ["Multi-tenant SaaS", "Event-driven", "SSR / SSG", "Webhook orchestration", "Performance"],
+  },
 ];
 
 export const languageStats = [
