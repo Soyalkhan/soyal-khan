@@ -8,10 +8,17 @@ import {
   Download,
   Palette,
   Rocket,
-  Star,
   Store,
 } from "lucide-react";
-import { SiShopify, SiGoogleplay, SiReact, SiNextdotjs, SiRemix, SiNodedotjs, SiMongodb, SiTypescript } from "react-icons/si";
+import {
+  SiShopify,
+  SiReact,
+  SiNextdotjs,
+  SiRemix,
+  SiNodedotjs,
+  SiMongodb,
+  SiTypescript,
+} from "react-icons/si";
 import { gsap } from "gsap";
 import { profile, stats } from "@/lib/github-data";
 
@@ -244,20 +251,31 @@ export function Hero() {
                     (e.currentTarget as HTMLImageElement).src = profile.avatar;
                   }}
                 />
-              </div>
 
-              <div className="absolute -left-3 top-8 flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 card-soft sm:-left-6">
-                <SiShopify className="h-4 w-4 text-slate" />
-                <span className="text-xs font-medium text-foreground">App Store</span>
-                <span className="flex items-center gap-0.5 text-xs text-muted-foreground">
-                  <Star className="h-3 w-3 fill-current text-brand-deep" />
-                  {stats.appRating}
-                </span>
-              </div>
+                {/* Inside the card, so its rounded overflow does the clipping. */}
+                <svg
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 h-full w-full"
+                >
+                  <rect
+                    x="0"
+                    y="0"
+                    width="100%"
+                    height="100%"
+                    rx="28"
+                    pathLength={100}
+                    fill="none"
+                    stroke="#ffffff"
+                    strokeWidth={6}
+                    className="edge-trace"
+                  />
+                </svg>
 
-              <div className="absolute -right-3 bottom-10 flex items-center gap-2 rounded-full border border-border bg-card px-3 py-2 card-soft sm:-right-6">
-                <SiGoogleplay className="h-4 w-4 text-slate" />
-                <span className="text-xs font-medium text-foreground">Live on Play Store</span>
+                <div className="absolute bottom-4 left-4 rounded-full bg-card px-5 py-3 card-soft">
+                  <p className="font-display text-base leading-none text-foreground">
+                    Hey, I&apos;m Soyal <span aria-hidden>👋</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>

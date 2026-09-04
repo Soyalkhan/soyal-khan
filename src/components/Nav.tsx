@@ -2,21 +2,51 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import {
+  ArrowUpRight,
+  Briefcase,
+  ChevronRight,
+  LayoutGrid,
+  Mail,
+  Menu,
+  PenLine,
+  User,
+  Wrench,
+  X,
+} from "lucide-react";
 import { profile } from "@/lib/github-data";
 
-/* In-page anchors only work on "/" — prefix them so they resolve from /notes too. */
+/* In-page anchors only work on "/" — prefix them so they resolve from /notes too.
+   Icons are used by the mobile sheet only; the desktop bar stays text. */
 const LINKS = [
-  { href: "/#apps", label: "Apps" },
-  { href: "/#work", label: "Work" },
-  { href: "/#services", label: "Services" },
-  { href: "/#about", label: "About" },
-  { href: "/notes", label: "Notes" },
+  { href: "/#apps", label: "Apps", Icon: LayoutGrid },
+  { href: "/#work", label: "Work", Icon: Briefcase },
+  { href: "/#services", label: "Services", Icon: Wrench },
+  { href: "/#about", label: "About", Icon: User },
+  { href: "/notes", label: "Notes", Icon: PenLine },
 ];
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  // Kept mounted through the close animation so it can animate out, not vanish.
+  const [mounted, setMounted] = useState(false);
+
+  const toggleMenu = () => {
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    setMounted(true);
+    setOpen(true);
+  };
+
+  // Unmount only once the close animation has run.
+  useEffect(() => {
+    if (open) return;
+    const t = window.setTimeout(() => setMounted(false), 170);
+    return () => window.clearTimeout(t);
+  }, [open]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16);
@@ -35,11 +65,12 @@ export function Nav() {
               : "border border-transparent"
           }`}
         >
-          <Link href="/" className="flex items-center gap-2.5 pl-1">
-            <span className="grid h-8 w-8 place-items-center rounded-full bg-brand font-display text-sm font-semibold text-slate-deep">
-              S
+          <Link href="/" className="group flex items-center gap-2.5 pl-1">
+            {/* Same mark as the favicon — lime tile, dark monogram. */}
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand font-display text-[13px] font-semibold leading-none tracking-tight text-slate-deep transition-colors group-hover:bg-brand-deep">
+              SK
             </span>
-            <span className="hidden text-sm font-medium text-foreground sm:inline">
+            <span className="hidden font-display text-[15px] leading-none text-foreground decoration-brand decoration-2 underline-offset-4 group-hover:underline sm:inline">
               Soyal Khan
             </span>
           </Link>
@@ -73,33 +104,72 @@ export function Nav() {
             </Link>
             <button
               type="button"
-              onClick={() => setOpen((v) => !v)}
+              onClick={toggleMenu}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
               className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-foreground md:hidden"
             >
-              {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              <span className="relative grid h-4 w-4 place-items-center">
+                <Menu
+                  className={`absolute h-4 w-4 transition-all duration-200 ${
+                    open ? "rotate-90 scale-75 opacity-0" : "rotate-0 scale-100 opacity-100"
+                  }`}
+                />
+                <X
+                  className={`absolute h-4 w-4 transition-all duration-200 ${
+                    open ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-75 opacity-0"
+                  }`}
+                />
+              </span>
             </button>
           </div>
         </div>
 
-        {open && (
-          <nav className="mt-2 rounded-2xl border border-border bg-card p-2 card-soft md:hidden">
-            {[...LINKS, { href: "/#contact", label: "Contact" }].map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="block rounded-xl px-4 py-3 text-sm text-body transition-colors hover:bg-muted"
-              >
-                {l.label}
-              </Link>
-            ))}
+        {mounted && (
+          <nav
+            className={`mt-2 origin-top overflow-hidden rounded-2xl border border-border bg-card card-soft md:hidden ${
+              open ? "menu-panel-in" : "menu-panel-out"
+            }`}
+          >
+            <ul className="divide-y divide-border">
+              {[...LINKS, { href: "/#contact", label: "Contact", Icon: Mail }].map(
+                ({ href, label, Icon }, i) => (
+                  <li
+                    key={href}
+                    className="menu-row"
+                    style={{ animationDelay: `${60 + i * 35}ms` }}
+                  >
+                    <Link
+                      href={href}
+                      onClick={() => setOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 transition-colors active:bg-muted"
+                    >
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand/30 text-slate-deep">
+                        <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                      </span>
+                      <span className="flex-1 text-sm font-medium text-foreground">
+                        {label}
+                      </span>
+                      <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    </Link>
+                  </li>
+                ),
+              )}
+            </ul>
+
             <a
               href={`mailto:${profile.email}`}
-              className="block rounded-xl px-4 py-3 text-sm text-muted-foreground"
+              onClick={() => setOpen(false)}
+              className="menu-row flex items-center gap-3 border-t border-border bg-muted/60 px-4 py-3"
+              style={{ animationDelay: `${60 + LINKS.length * 35 + 35}ms` }}
             >
-              {profile.email}
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-slate text-brand">
+                <Mail className="h-[18px] w-[18px]" strokeWidth={1.75} />
+              </span>
+              <span className="min-w-0 flex-1 truncate text-sm text-body">
+                {profile.email}
+              </span>
+              <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground" />
             </a>
           </nav>
         )}

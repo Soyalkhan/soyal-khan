@@ -130,9 +130,11 @@ function CredCard({
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand/25 text-brand">
           <Icon className="h-4 w-4" strokeWidth={1.75} />
         </span>
-        <span className="text-xs tabular-nums text-on-slate-muted">{period}</span>
+        <span className="whitespace-nowrap text-xs tabular-nums text-on-slate-muted">
+          {period}
+        </span>
         {pill && (
-          <span className="ml-auto rounded-full bg-brand/20 px-2.5 py-0.5 text-[11px] font-medium text-brand">
+          <span className="ml-auto shrink-0 whitespace-nowrap rounded-full bg-brand/20 px-2.5 py-0.5 text-[11px] font-medium text-brand">
             {pill}
           </span>
         )}
@@ -219,7 +221,7 @@ export function About() {
         <Reveal className="mt-16 grid gap-12 border-t border-white/10 pt-12 lg:grid-cols-2 lg:gap-16">
           <div>
             <span className="eyebrow text-on-slate-muted">Education</span>
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
               {education.map((e) => (
                 <CredCard
                   key={e.short}
@@ -237,7 +239,7 @@ export function About() {
 
           <div>
             <span className="eyebrow text-on-slate-muted">Certifications</span>
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
               {certifications.map((c) => (
                 <CredCard
                   key={c.credentialId}
