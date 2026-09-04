@@ -1,56 +1,44 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Geist_Mono, Instrument_Serif, Inter } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({
+/* Fraunces — variable soft-serif. SOFT/WONK/opsz are exposed so headings can
+   be tuned for display sizes in globals.css via font-variation-settings. */
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  variable: "--font-bricolage",
-  display: "swap",
-});
-
-const instrument = Instrument_Serif({
-  subsets: ["latin"],
-  weight: ["400"],
   style: ["normal", "italic"],
-  variable: "--font-instrument",
+  axes: ["SOFT", "WONK", "opsz"],
+  variable: "--font-fraunces",
   display: "swap",
 });
 
 const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
   variable: "--font-inter",
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono-display",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
-  title: "Soyal Khan — Full-Stack Engineer",
+  title: "Soyal Khan — Full-Stack & Shopify Engineer",
   description:
-    "Soyal Khan — Full-Stack Engineer based in New Delhi, India. Shipping headless Shopify storefronts, custom dashboards, apps, and end-to-end web products.",
+    "Full-stack engineer in New Delhi. 3 published Shopify apps, 100+ storefronts, headless Hydrogen builds and custom commerce platforms.",
   metadataBase: new URL("https://soyalkhan.dev"),
   openGraph: {
-    title: "Soyal Khan — Full-Stack Engineer",
+    title: "Soyal Khan — Full-Stack & Shopify Engineer",
     description:
-      "Headless Shopify, Hydrogen/Remix, Node, MongoDB. Full-stack engineer crafting products that ship.",
+      "3 published Shopify apps · 100+ storefronts · headless Hydrogen/Remix · custom commerce platforms.",
     url: "https://soyalkhan.dev",
     siteName: "Soyal Khan",
-    images: ["/portrait.png"],
+    images: ["/my/mine.png"],
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Soyal Khan — Full-Stack Engineer",
-    description: "Headless Shopify, Hydrogen/Remix, Node, MongoDB.",
-    images: ["/portrait.png"],
+    title: "Soyal Khan — Full-Stack & Shopify Engineer",
+    description: "3 published Shopify apps · 100+ storefronts · headless Hydrogen/Remix.",
+    images: ["/my/mine.png"],
   },
 };
 
@@ -58,11 +46,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${bricolage.variable} ${instrument.variable} ${inter.variable} ${geistMono.variable}`}
-    >
-      <body className="bg-background text-foreground antialiased">{children}</body>
+    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
+      <body className="bg-background text-body antialiased">{children}</body>
     </html>
   );
 }

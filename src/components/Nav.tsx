@@ -1,92 +1,105 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { projects, caseStudies } from "@/lib/github-data";
+import { ArrowUpRight, Menu, X } from "lucide-react";
+import { profile } from "@/lib/github-data";
 
-const links = [
-  { href: "#case-studies", label: "Case Studies", count: caseStudies.length },
-  { href: "#projects", label: "Portfolio", count: projects.length },
+const LINKS = [
+  { href: "#apps", label: "Apps" },
+  { href: "#work", label: "Work" },
   { href: "#services", label: "Services" },
   { href: "#about", label: "About" },
-  { href: "#contact", label: "Contact" },
-] satisfies ReadonlyArray<{ href: string; label: string; count?: number }>;
+];
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [time, setTime] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 16);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-
-    const updateTime = () => {
-      const d = new Date();
-      const t = new Intl.DateTimeFormat("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-        timeZone: "Asia/Kolkata",
-      }).format(d);
-      setTime(`${t} IST`);
-    };
-    updateTime();
-    const id = setInterval(updateTime, 1000 * 30);
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      clearInterval(id);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled
-          ? "bg-background/85 backdrop-blur-md border-b border-border"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-4 md:px-8">
-        <a href="#top" className="group flex items-center gap-2.5">
-          <span className="flex h-6 w-6 items-center justify-center bg-brand font-display text-xs leading-none text-foreground">
-            S
-          </span>
-          <span className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-foreground sm:inline">
-            Soyal Khan<span className="text-muted-foreground">/Dev</span>
-          </span>
-        </a>
-
-        <nav className="hidden md:block">
-          <ul className="flex items-center gap-8">
-            {links.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  className="group flex items-baseline gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <span>{l.label}</span>
-                  {l.count !== undefined && (
-                    <span className="text-brand">[{String(l.count).padStart(2, "0")}]</span>
-                  )}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div className="flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-          <span className="hidden sm:inline">{time}</span>
-          <a
-            href="https://github.com/Soyalkhan"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 text-foreground transition-colors hover:text-brand"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 blink" />
-            Available
+    <header className="fixed inset-x-0 top-0 z-50 pt-3 md:pt-4">
+      <div className="shell">
+        <div
+          className={`flex items-center justify-between gap-4 rounded-full px-3 py-2 transition-all duration-300 md:px-4 ${
+            scrolled
+              ? "border border-border bg-card/85 backdrop-blur-xl card-soft"
+              : "border border-transparent"
+          }`}
+        >
+          <a href="#top" className="flex items-center gap-2.5 pl-1">
+            <span className="grid h-8 w-8 place-items-center rounded-full bg-brand font-display text-sm font-semibold text-slate-deep">
+              S
+            </span>
+            <span className="hidden text-sm font-medium text-foreground sm:inline">
+              Soyal Khan
+            </span>
           </a>
+
+          <nav className="hidden md:block">
+            <ul className="flex items-center gap-1">
+              {LINKS.map((l) => (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    className="rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  >
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex items-center gap-2">
+            <span className="hidden items-center gap-2 pr-1 text-xs text-muted-foreground lg:flex">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-deep blink" />
+              Available
+            </span>
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-1.5 rounded-full bg-slate px-4 py-2 text-sm font-medium text-background transition-colors hover:bg-slate-deep"
+            >
+              Let&apos;s talk
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </a>
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              className="grid h-9 w-9 place-items-center rounded-full border border-border bg-card text-foreground md:hidden"
+            >
+              {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
         </div>
+
+        {open && (
+          <nav className="mt-2 rounded-2xl border border-border bg-card p-2 card-soft md:hidden">
+            {[...LINKS, { href: "#contact", label: "Contact" }].map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="block rounded-xl px-4 py-3 text-sm text-body transition-colors hover:bg-muted"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a
+              href={`mailto:${profile.email}`}
+              className="block rounded-xl px-4 py-3 text-sm text-muted-foreground"
+            >
+              {profile.email}
+            </a>
+          </nav>
+        )}
       </div>
     </header>
   );

@@ -9,10 +9,11 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+/** Short, low-travel entrance. Long reveals made the old page feel even longer. */
 export function Reveal({
   children,
   delay = 0,
-  y = 24,
+  y = 16,
   className = "",
   as: Tag = "div",
 }: {
@@ -27,6 +28,8 @@ export function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         el,
@@ -34,11 +37,11 @@ export function Reveal({
         {
           opacity: 1,
           y: 0,
-          duration: 1.1,
+          duration: 0.6,
           delay,
-          ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 88%" },
-        }
+          ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 92%" },
+        },
       );
     });
     return () => ctx.revert();
@@ -46,44 +49,4 @@ export function Reveal({
 
   // @ts-expect-error dynamic tag ref
   return <Tag ref={ref} className={className}>{children}</Tag>;
-}
-
-export function StaggerChildren({
-  children,
-  className = "",
-  selector = ":scope > *",
-  stagger = 0.08,
-}: {
-  children: ReactNode;
-  className?: string;
-  selector?: string;
-  stagger?: number;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        el.querySelectorAll(selector),
-        { opacity: 0, y: 28 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: "power3.out",
-          stagger,
-          scrollTrigger: { trigger: el, start: "top 85%" },
-        }
-      );
-    });
-    return () => ctx.revert();
-  }, [selector, stagger]);
-
-  return (
-    <div ref={ref} className={className}>
-      {children}
-    </div>
-  );
 }

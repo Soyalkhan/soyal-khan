@@ -1,164 +1,155 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
-  --font-display: var(--font-bricolage), "Inter", system-ui, sans-serif;
-  --font-serif: var(--font-instrument), "Times New Roman", serif;
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-mono: var(--font-mono-display), ui-monospace, monospace;
+  --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --radius-sm: 2px;
-  --radius-md: 2px;
-  --radius-lg: 2px;
-  --radius-xl: 2px;
-  --radius-2xl: 2px;
-  --radius-3xl: 2px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --radius-3xl: 36px;
+  --radius-full: 9999px;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-body: var(--body);
   --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
   --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
+  --color-slate: var(--slate);
+  --color-on-slate: var(--on-slate);
+  --color-on-slate-muted: var(--on-slate-muted);
+  --color-slate-deep: var(--slate-deep);
 }
 
 :root {
-  --radius: 2px;
-
-  /* Brutalist editorial palette — pitch black + off-white + electric blue */
-  --background: oklch(0.04 0 0);
-  --foreground: oklch(0.96 0 0);
-  --card: oklch(0.07 0 0);
-  --card-foreground: oklch(0.96 0 0);
-  --popover: oklch(0.07 0 0);
-  --popover-foreground: oklch(0.96 0 0);
-  --primary: oklch(0.96 0 0);
-  --primary-foreground: oklch(0.04 0 0);
-  --secondary: oklch(0.12 0 0);
-  --secondary-foreground: oklch(0.96 0 0);
-  --muted: oklch(0.12 0 0);
-  --muted-foreground: oklch(0.55 0 0);
-  --accent: oklch(0.5 0.28 264);
-  --accent-foreground: oklch(0.96 0 0);
-  --destructive: oklch(0.65 0.22 27);
-  --destructive-foreground: oklch(0.96 0 0);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.5 0.28 264);
-  --brand: oklch(0.5 0.28 264);
-}
-
-.dark {
-  --background: oklch(0.04 0 0);
-  --foreground: oklch(0.96 0 0);
+  /* Palette — slate #485550 · lime #C0EB6A · paper #F4F6F0 · white #FFFFFF */
+  --background: #f4f6f0;
+  --card: #ffffff;
+  --foreground: #2f3a35; /* headings ink — 7.7:1 on paper */
+  --body: #485550;       /* body copy — 7.1:1 on paper */
+  --muted-foreground: #5f6c66; /* meta — 4.9:1 on paper */
+  --muted: #eaeee4;
+  --border: #e0e5d9;
+  --brand: #c0eb6a;
+  --brand-deep: #a9d94e;
+  --slate: #485550;
+  --slate-deep: #3a4541;
+  --on-slate: #eef1ea;        /* headings on slate — 6.9:1 */
+  --on-slate-muted: #c9d0cb;  /* body on slate — 4.9:1 */
 }
 
 @layer base {
   * {
-    border-color: var(--color-border);
+    border-color: var(--border);
     min-width: 0;
   }
   html {
-    color-scheme: dark;
+    color-scheme: light;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: clip;
-    max-width: 100vw;
+    scroll-behavior: smooth;
   }
   body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
+    background-color: var(--background);
+    color: var(--body);
     font-family: var(--font-sans);
     overflow-x: clip;
-    max-width: 100vw;
   }
   ::selection {
     background: var(--brand);
-    color: var(--color-foreground);
+    color: var(--slate-deep);
+  }
+  h1, h2, h3, h4 {
+    color: var(--foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--slate);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 }
 
 @layer utilities {
+  /* Fraunces — the one display face. Variable soft-serif, set per role below. */
+  /* opsz 90 pulls in the high-contrast display cut; WONK 1 keeps the angled
+     terminals that give Fraunces its character. */
   .font-display {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 600;
+    font-variation-settings: "SOFT" 20, "WONK" 1, "opsz" 40;
     letter-spacing: -0.01em;
+    line-height: 1.1;
   }
-  .font-mono {
-    font-family: var(--font-mono);
-  }
-  .text-brand {
-    color: var(--brand);
-  }
-  .bg-brand {
-    background-color: var(--brand);
-  }
-  .border-brand {
-    border-color: var(--brand);
-  }
-  .display-massive {
+  .display-xl {
     font-family: var(--font-display);
-    font-weight: 800;
-    line-height: 0.86;
-    letter-spacing: -0.045em;
+    font-weight: 700;
+    font-variation-settings: "SOFT" 30, "WONK" 1, "opsz" 90;
+    letter-spacing: -0.025em;
+    line-height: 1.02;
   }
-  .font-serif {
-    font-family: var(--font-serif);
-    font-weight: 400;
-    letter-spacing: -0.01em;
-  }
-  .meta-tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
+
+  /* Small uppercase label — replaces the old mono meta-tag noise */
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--color-muted-foreground);
   }
-  .grain::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 100;
-    opacity: 0.06;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+
+  /* Lime never carries text on paper (1.3:1) — it highlights behind it. */
+  .hl {
+    background-image: linear-gradient(
+      to bottom,
+      transparent 55%,
+      var(--brand) 55%,
+      var(--brand) 94%,
+      transparent 93%
+    );
+    padding-inline: 0.08em;
   }
-  .marquee-track {
-    animation: marquee 50s linear infinite;
+
+  .card-soft {
+    box-shadow: 0 1px 2px rgb(47 58 53 / 0.04), 0 12px 32px -18px rgb(47 58 53 / 0.28);
   }
-  .ticker {
-    animation: ticker 18s linear infinite;
+  .card-lift {
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 2px 4px rgb(47 58 53 / 0.05), 0 22px 48px -20px rgb(47 58 53 / 0.34);
+  }
+
+  .shell {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 1240px;
+    padding-inline: 1.25rem;
   }
 }
 
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-@keyframes ticker {
-  from { transform: translateX(100%); }
-  to { transform: translateX(-100%); }
+@media (min-width: 768px) {
+  .shell { padding-inline: 2rem; }
 }
 
 @keyframes blink {
-  50% { opacity: 0.2; }
+  50% { opacity: 0.25; }
 }
-.blink { animation: blink 1.2s steps(2, end) infinite; }
+.blink { animation: blink 1.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
