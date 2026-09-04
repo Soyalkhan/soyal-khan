@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { profile } from "@/lib/github-data";
 
+/* In-page anchors only work on "/" — prefix them so they resolve from /notes too. */
 const LINKS = [
-  { href: "#apps", label: "Apps" },
-  { href: "#work", label: "Work" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
+  { href: "/#apps", label: "Apps" },
+  { href: "/#work", label: "Work" },
+  { href: "/#services", label: "Services" },
+  { href: "/#about", label: "About" },
+  { href: "/notes", label: "Notes" },
 ];
 
 export function Nav() {
@@ -32,25 +35,25 @@ export function Nav() {
               : "border border-transparent"
           }`}
         >
-          <a href="#top" className="flex items-center gap-2.5 pl-1">
+          <Link href="/" className="flex items-center gap-2.5 pl-1">
             <span className="grid h-8 w-8 place-items-center rounded-full bg-brand font-display text-sm font-semibold text-slate-deep">
               S
             </span>
             <span className="hidden text-sm font-medium text-foreground sm:inline">
               Soyal Khan
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden md:block">
             <ul className="flex items-center gap-1">
               {LINKS.map((l) => (
                 <li key={l.href}>
-                  <a
+                  <Link
                     href={l.href}
                     className="rounded-full px-4 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -61,13 +64,13 @@ export function Nav() {
               <span className="h-1.5 w-1.5 rounded-full bg-brand-deep blink" />
               Available
             </span>
-            <a
-              href="#contact"
+            <Link
+              href="/#contact"
               className="group inline-flex items-center gap-1.5 rounded-full bg-slate px-4 py-2 text-sm font-medium text-background transition-colors hover:bg-slate-deep"
             >
               Let&apos;s talk
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-            </a>
+            </Link>
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
@@ -82,15 +85,15 @@ export function Nav() {
 
         {open && (
           <nav className="mt-2 rounded-2xl border border-border bg-card p-2 card-soft md:hidden">
-            {[...LINKS, { href: "#contact", label: "Contact" }].map((l) => (
-              <a
+            {[...LINKS, { href: "/#contact", label: "Contact" }].map((l) => (
+              <Link
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
                 className="block rounded-xl px-4 py-3 text-sm text-body transition-colors hover:bg-muted"
               >
                 {l.label}
-              </a>
+              </Link>
             ))}
             <a
               href={`mailto:${profile.email}`}

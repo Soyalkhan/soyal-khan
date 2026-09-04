@@ -30,12 +30,23 @@ export function SmoothScroll() {
     };
     raf = requestAnimationFrame(tick);
 
+    // Nav links are "/#work" so they also resolve from /notes. Intercept any
+    // same-page hash link; cross-page ones fall through to the router.
     const handleAnchor = (e: MouseEvent) => {
-      const a = (e.target as HTMLElement)?.closest('a[href^="#"]') as HTMLAnchorElement | null;
-      if (!a) return;
-      const id = a.getAttribute("href");
-      if (!id || id === "#" || id.length < 2) return;
-      const el = document.querySelector(id);
+      const a = (e.target as HTMLElement)?.closest("a[href]") as HTMLAnchorElement | null;
+      if (!a || a.target === "_blank") return;
+
+      let url: URL;
+      try {
+        url = new URL(a.href, window.location.href);
+      } catch {
+        return;
+      }
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname !== window.location.pathname) return;
+      if (!url.hash || url.hash.length < 2) return;
+
+      const el = document.querySelector(url.hash);
       if (!el) return;
       e.preventDefault();
       lenis.scrollTo(el as HTMLElement, { offset: -80, duration: 1.4 });
