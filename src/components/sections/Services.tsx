@@ -51,14 +51,24 @@ export function Services() {
         <Reveal className="mt-10 rounded-2xl border border-border bg-card p-6 md:p-7">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
             <span className="eyebrow shrink-0 text-muted-foreground">Integrated before</span>
-            <div className="flex flex-wrap gap-2">
+            <div className="no-scrollbar flex snap-x gap-2 overflow-x-auto pb-1">
               {partners.map((p) => (
                 <span
                   key={p.name}
-                  title={p.category}
-                  className="rounded-full border border-border px-3 py-1.5 font-display text-sm text-foreground"
+                  title={`${p.name} — ${p.category}`}
+                  className="inline-flex shrink-0 snap-start items-center gap-2 whitespace-nowrap rounded-full border border-border bg-card py-1.5 pl-1.5 pr-3.5"
                 >
-                  {p.name}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={p.logo}
+                    alt=""
+                    aria-hidden
+                    width={24}
+                    height={24}
+                    loading="lazy"
+                    className="h-6 w-6 shrink-0 rounded-md object-contain"
+                  />
+                  <span className="font-display text-sm text-foreground">{p.name}</span>
                 </span>
               ))}
             </div>

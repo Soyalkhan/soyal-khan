@@ -19,7 +19,7 @@ export function NotesList({ notes }: { notes: Note[] }) {
   return (
     <>
       {tags.length > 1 && (
-        <div className="mb-10 flex flex-wrap gap-2">
+        <div className="no-scrollbar mb-10 flex snap-x gap-2 overflow-x-auto pb-1">
           {[["all", notes.length] as const, ...tags].map(([key, count]) => {
             const active = tag === key;
             return (
@@ -28,7 +28,7 @@ export function NotesList({ notes }: { notes: Note[] }) {
                 type="button"
                 onClick={() => setTag(key)}
                 aria-pressed={active}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm transition-colors ${
+                className={`inline-flex shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-colors ${
                   active
                     ? "border-transparent bg-slate text-background"
                     : "border-border bg-card text-muted-foreground hover:border-slate hover:text-foreground"
@@ -73,7 +73,9 @@ export function NotesList({ notes }: { notes: Note[] }) {
                       </span>
                     )}
                   </h2>
-                  <ArrowUpRight className="mt-1.5 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground" />
+                  <span className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand text-slate-deep transition-colors group-hover:bg-brand-deep">
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </span>
                 </div>
 
                 {n.excerpt && (

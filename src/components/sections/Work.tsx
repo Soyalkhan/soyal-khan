@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ArrowUpRight, Star } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Star } from "lucide-react";
 import { SiShopify, SiGoogleplay } from "react-icons/si";
 import { Reveal } from "@/components/Reveal";
 import { APP_CATEGORIES } from "@/components/sections/Apps";
 import {
   projects,
-  caseStudies,
+  moreThemes,
   CATEGORY_LABELS,
   type Project,
   type ProjectCategory,
@@ -23,9 +23,6 @@ const FILTERS: { key: ProjectCategory | "all"; label: string }[] = [
   { key: "theme", label: "Themes" },
   { key: "custom-dev", label: "Full-Stack" },
 ];
-
-const FEATURED = caseStudies.slice(0, 2);
-const FEATURED_NAMES = new Set(FEATURED.map((p) => p.name));
 
 /* Projects without a banner get a quiet slate nameplate, not an empty colour
    block — the palette stays calm and the card still reads as a real build. */
@@ -115,46 +112,7 @@ function Thumb({ project, index, tall }: { project: Project; index: number; tall
   );
 }
 
-function FeaturedCard({ project, index }: { project: Project; index: number }) {
-  return (
-    <a
-      href={project.url}
-      target="_blank"
-      rel="noreferrer"
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card card-soft card-lift"
-    >
-      <Thumb project={project} index={index} tall />
-      <div className="flex flex-1 flex-col p-6">
-        <div className="flex items-start justify-between gap-4">
-          <h3 className="font-display text-2xl text-foreground md:text-3xl">
-            {project.shortName ?? project.name}
-          </h3>
-          <span className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-foreground transition-colors group-hover:border-transparent group-hover:bg-brand">
-            <ArrowUpRight className="h-4 w-4" />
-          </span>
-        </div>
-        <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-          {project.tagline ?? project.description}
-        </p>
-        <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
-          <span className="rounded-full bg-muted px-2.5 py-1 font-medium text-body">
-            {CATEGORY_LABELS[project.category]}
-          </span>
-          <span>·</span>
-          <span>{project.year}</span>
-          {host(project.url) && (
-            <>
-              <span>·</span>
-              <span className="text-body">{host(project.url)}</span>
-            </>
-          )}
-        </div>
-      </div>
-    </a>
-  );
-}
-
-function GridCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <a
       href={project.url}
@@ -184,14 +142,141 @@ function GridCard({ project, index }: { project: Project; index: number }) {
   );
 }
 
+function MoreCard() {
+  return (
+    <div className="flex h-full flex-col justify-between rounded-2xl bg-slate p-6">
+      <div>
+        <span className="font-display text-4xl text-brand">{moreThemes.count}</span>
+        <h3 className="mt-2 font-display text-xl text-on-slate">
+          {moreThemes.headline}
+        </h3>
+        <p className="mt-2.5 text-sm leading-relaxed text-on-slate-muted">
+          {moreThemes.blurb}
+        </p>
+      </div>
+
+      {moreThemes.links.length > 0 ? (
+        <ul className="mt-5 space-y-1.5">
+          {moreThemes.links.map((l) => (
+            <li key={l.url}>
+              <a
+                href={l.url}
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex items-center gap-1.5 text-sm text-brand"
+              >
+                {l.name}
+                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <a
+          href="#contact"
+          className="group mt-6 inline-flex items-center gap-2 self-start rounded-full bg-brand px-5 py-3 text-sm font-medium text-slate-deep transition-colors hover:bg-brand-deep"
+        >
+          See more work
+          <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        </a>
+      )}
+    </div>
+  );
+}
+
+/** Scroll-snap rail. No carousel library — a real scroll container keeps
+ *  swipe, keyboard and screen-reader behaviour working for free. */
+function Carousel({ items, more }: { items: Project[]; more: boolean }) {
+  const railRef = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ start: true, end: false });
+
+  const sync = useCallback(() => {
+    const el = railRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setEdges({ start: el.scrollLeft <= 1, end: el.scrollLeft >= max - 1 });
+  }, []);
+
+  useEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    el.scrollTo({ left: 0 });
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [items, more, sync]);
+
+  const page = (dir: 1 | -1) => {
+    const el = railRef.current;
+    if (!el) return;
+    const card = el.firstElementChild as HTMLElement | null;
+    const step = card ? card.offsetWidth + 20 : el.clientWidth * 0.8;
+    el.scrollBy({ left: step * dir, behavior: "smooth" });
+  };
+
+  return (
+    <div className="relative">
+      <div
+        ref={railRef}
+        onScroll={sync}
+        tabIndex={0}
+        role="region"
+        aria-label="Projects"
+        className="no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2"
+      >
+        {items.map((p, i) => (
+          <div
+            key={p.name}
+            className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[31.5%]"
+          >
+            <ProjectCard project={p} index={i} />
+          </div>
+        ))}
+
+        {more && (
+          <div className="w-[82%] shrink-0 snap-start sm:w-[46%] lg:w-[31.5%]">
+            <MoreCard />
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 flex items-center justify-between gap-4">
+        <span className="text-sm text-muted-foreground">
+          Swipe or drag to browse · {items.length}{" "}
+          {items.length === 1 ? "project" : "projects"}
+          {more && ` + ${moreThemes.count} more themes`}
+        </span>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => page(-1)}
+            disabled={edges.start}
+            aria-label="Previous projects"
+            className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card text-foreground transition-colors hover:border-slate disabled:opacity-35 disabled:hover:border-border"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => page(1)}
+            disabled={edges.end}
+            aria-label="More projects"
+            className="grid h-10 w-10 place-items-center rounded-full border border-border bg-card text-foreground transition-colors hover:border-slate disabled:opacity-35 disabled:hover:border-border"
+          >
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Work() {
   const [filter, setFilter] = useState<ProjectCategory | "all">("all");
 
-  const grid = useMemo(
-    () =>
-      BUILDS.filter(
-        (p) => (filter === "all" ? !FEATURED_NAMES.has(p.name) : p.category === filter),
-      ),
+  const shown = useMemo(
+    () => (filter === "all" ? BUILDS : BUILDS.filter((p) => p.category === filter)),
     [filter],
   );
 
@@ -217,8 +302,7 @@ export function Work() {
           </p>
         </Reveal>
 
-        {/* Filters */}
-        <Reveal className="mt-8 flex flex-wrap gap-2">
+        <Reveal className="no-scrollbar mt-8 flex snap-x gap-2 overflow-x-auto pb-1">
           {FILTERS.map((f) => {
             const active = filter === f.key;
             return (
@@ -227,7 +311,7 @@ export function Work() {
                 type="button"
                 onClick={() => setFilter(f.key)}
                 aria-pressed={active}
-                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm transition-colors ${
+                className={`inline-flex shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full border px-4 py-2 text-sm transition-colors ${
                   active
                     ? "border-transparent bg-slate text-background"
                     : "border-border bg-card text-muted-foreground hover:border-slate hover:text-foreground"
@@ -242,23 +326,8 @@ export function Work() {
           })}
         </Reveal>
 
-        {/* Featured pair — only on the unfiltered view */}
-        {filter === "all" && (
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {FEATURED.map((p, i) => (
-              <Reveal key={p.name} delay={i * 0.06} className="h-full">
-                <FeaturedCard project={p} index={i} />
-              </Reveal>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {grid.map((p, i) => (
-            <Reveal key={p.name} delay={Math.min(i, 5) * 0.04} className="h-full">
-              <GridCard project={p} index={i + 2} />
-            </Reveal>
-          ))}
+        <div className="mt-8">
+          <Carousel items={shown} more={filter === "all" || filter === "theme"} />
         </div>
       </div>
     </section>

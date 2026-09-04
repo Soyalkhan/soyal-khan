@@ -1,5 +1,6 @@
 "use client";
 
+import { BadgeCheck, GraduationCap } from "lucide-react";
 import { Reveal } from "@/components/Reveal";
 import {
   certifications,
@@ -13,6 +14,35 @@ import {
 /* The eight labelled skill groups (40+ chips) were the noisiest block on the
    old page. Three per group keeps the signal and drops the wall. */
 const STACK = skills.flatMap((g) => g.items.slice(0, 3));
+
+/* 24 chips wrap to seven rows on a phone. Two scrolling rows say the same thing
+   in a fraction of the height. */
+function StackMarquee({ items }: { items: string[] }) {
+  const half = Math.ceil(items.length / 2);
+  const rows = [items.slice(0, half), items.slice(half)];
+
+  return (
+    <div className="space-y-1.5" aria-hidden>
+      {rows.map((row, i) => (
+        <div key={i} className="marquee-mask">
+          <div
+            className={`marquee-row ${i % 2 ? "marquee-row--reverse" : ""}`}
+            style={{ ["--marquee-duration" as string]: i % 2 ? "34s" : "28s" }}
+          >
+            {[...row, ...row].map((t, j) => (
+              <span
+                key={`${t}-${j}`}
+                className="shrink-0 whitespace-nowrap rounded-full border border-white/15 px-2.5 py-1 text-[11px] text-on-slate-muted"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function Role({ job, last }: { job: Experience; last: boolean }) {
   return (
@@ -75,6 +105,60 @@ function Role({ job, last }: { job: Experience; last: boolean }) {
   );
 }
 
+function CredCard({
+  Icon,
+  period,
+  title,
+  titleAttr,
+  subtitle,
+  accentSubtitle,
+  pill,
+  detail,
+}: {
+  Icon: typeof GraduationCap;
+  period: string;
+  title: string;
+  titleAttr?: string;
+  subtitle: string;
+  accentSubtitle?: boolean;
+  pill?: string;
+  detail?: string;
+}) {
+  return (
+    <li className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+      <div className="flex items-center gap-2.5">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand/25 text-brand">
+          <Icon className="h-4 w-4" strokeWidth={1.75} />
+        </span>
+        <span className="text-xs tabular-nums text-on-slate-muted">{period}</span>
+        {pill && (
+          <span className="ml-auto rounded-full bg-brand/20 px-2.5 py-0.5 text-[11px] font-medium text-brand">
+            {pill}
+          </span>
+        )}
+      </div>
+
+      <h3
+        className="mt-4 font-display text-lg leading-snug text-on-slate"
+        title={titleAttr}
+      >
+        {title}
+      </h3>
+      <p
+        className={`mt-1 text-sm ${accentSubtitle ? "text-brand" : "text-on-slate-muted"}`}
+      >
+        {subtitle}
+      </p>
+
+      {detail && (
+        <p className="mt-3 border-t border-white/10 pt-3 text-xs leading-relaxed text-on-slate-muted/75">
+          {detail}
+        </p>
+      )}
+    </li>
+  );
+}
+
 export function About() {
   return (
     <section id="about" className="scroll-mt-24 bg-slate py-20 md:py-24">
@@ -99,7 +183,13 @@ export function About() {
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-1.5">
+            <div className="mt-8 md:hidden">
+              <StackMarquee items={STACK} />
+              {/* the marquee is decorative; keep the list readable to screen readers */}
+              <span className="sr-only">Stack: {STACK.join(", ")}</span>
+            </div>
+
+            <div className="mt-8 hidden flex-wrap gap-1.5 md:flex">
               {STACK.map((t) => (
                 <span
                   key={t}
@@ -110,70 +200,6 @@ export function About() {
               ))}
             </div>
 
-            <div className="mt-10 border-t border-white/10 pt-7">
-              <span className="eyebrow text-on-slate-muted">Education</span>
-              <ul className="mt-4 space-y-5">
-                {education.map((e) => (
-                  <li key={e.short}>
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-                      <h3 className="font-display text-base text-on-slate">{e.short}</h3>
-                      <span className="text-xs tabular-nums text-on-slate-muted">
-                        {e.period}
-                      </span>
-                    </div>
-                    <p className="mt-0.5 text-sm text-on-slate-muted">
-                      {e.qualification}
-                      {e.grade && (
-                        <span className="text-brand"> · Grade {e.grade}</span>
-                      )}
-                    </p>
-                    {e.focus && (
-                      <p className="mt-1.5 text-xs leading-relaxed text-on-slate-muted/80">
-                        {e.focus.join(" · ")}
-                      </p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-8 border-t border-white/10 pt-7">
-              <span className="eyebrow text-on-slate-muted">Certifications</span>
-              <ul className="mt-4 space-y-4">
-                {certifications.map((c) => {
-                  const body = (
-                    <>
-                      <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-                        <h3 className="font-display text-base text-on-slate">{c.name}</h3>
-                        <span className="text-xs tabular-nums text-on-slate-muted">
-                          {c.issued}
-                        </span>
-                      </div>
-                      <p className="mt-0.5 text-sm text-brand">{c.issuer}</p>
-                      <p className="mt-1 font-mono text-[11px] text-on-slate-muted/80">
-                        ID {c.credentialId}
-                      </p>
-                    </>
-                  );
-                  return (
-                    <li key={c.credentialId}>
-                      {c.url ? (
-                        <a
-                          href={c.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block transition-opacity hover:opacity-80"
-                        >
-                          {body}
-                        </a>
-                      ) : (
-                        body
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
           </Reveal>
 
           <Reveal className="lg:col-span-7">
@@ -189,6 +215,43 @@ export function About() {
             </ol>
           </Reveal>
         </div>
+
+        <Reveal className="mt-16 grid gap-12 border-t border-white/10 pt-12 lg:grid-cols-2 lg:gap-16">
+          <div>
+            <span className="eyebrow text-on-slate-muted">Education</span>
+            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              {education.map((e) => (
+                <CredCard
+                  key={e.short}
+                  Icon={GraduationCap}
+                  period={e.period}
+                  title={e.short}
+                  titleAttr={e.institution}
+                  subtitle={e.qualification}
+                  pill={e.grade && `Grade ${e.grade}`}
+                  detail={e.focus?.join(" · ")}
+                />
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <span className="eyebrow text-on-slate-muted">Certifications</span>
+            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              {certifications.map((c) => (
+                <CredCard
+                  key={c.credentialId}
+                  Icon={BadgeCheck}
+                  period={c.issued}
+                  title={c.name}
+                  subtitle={c.issuer}
+                  accentSubtitle
+                  detail={`Credential ID ${c.credentialId}`}
+                />
+              ))}
+            </ul>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

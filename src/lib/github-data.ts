@@ -381,6 +381,16 @@ export const CATEGORY_LABELS: Record<ProjectCategory, string> = {
   "custom-dev": "Custom Full-Stack",
 };
 
+/** The theme work is far larger than what's public. Drop entries into `links`
+ *  as they get cleared for showing and the carousel card picks them up. */
+export const moreThemes = {
+  count: stats.themesBuilt,
+  headline: "And counting\u2026",
+  blurb:
+    "Most custom theme work sits behind NDAs or has since been rebranded. Happy to walk through the rest on a call.",
+  links: [] as { name: string; url: string }[],
+};
+
 export type Service = {
   title: string;
   pitch: string;
@@ -427,17 +437,18 @@ export const services: Service[] = [
   },
 ];
 
-export type Partner = { name: string; category: string };
+export type Partner = { name: string; category: string; logo: string };
 
+/* Marks pulled from each vendor's own site into public/partners/. */
 export const partners: Partner[] = [
-  { name: "Gokwik", category: "Checkout" },
-  { name: "Breeze", category: "Checkout" },
-  { name: "Juspay", category: "Payments" },
-  { name: "Aisensy", category: "WhatsApp Marketing" },
-  { name: "Shiprocket", category: "Logistics" },
-  { name: "Clickpost", category: "Tracking" },
-  { name: "Interakt", category: "WhatsApp Business" },
-  { name: "Wati", category: "WhatsApp Business" },
+  { name: "GoKwik", category: "Checkout", logo: "/partners/gokwik.png" },
+  { name: "Breeze", category: "Checkout", logo: "/partners/breeze.svg" },
+  { name: "Juspay", category: "Payments", logo: "/partners/juspay.png" },
+  { name: "AiSensy", category: "WhatsApp Marketing", logo: "/partners/aisensy.png" },
+  { name: "Shiprocket", category: "Logistics", logo: "/partners/shiprocket.png" },
+  { name: "Clickpost", category: "Tracking", logo: "/partners/clickpost.png" },
+  { name: "Interakt", category: "WhatsApp Business", logo: "/partners/interakt.svg" },
+  { name: "Wati", category: "WhatsApp Business", logo: "/partners/wati.png" },
 ];
 
 export const skills = [

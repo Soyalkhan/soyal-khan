@@ -1,7 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowDown, Check, Download, Star } from "lucide-react";
+import {
+  ArrowDown,
+  CalendarDays,
+  Check,
+  Download,
+  Palette,
+  Rocket,
+  Star,
+  Store,
+} from "lucide-react";
 import { SiShopify, SiGoogleplay, SiReact, SiNextdotjs, SiRemix, SiNodedotjs, SiMongodb, SiTypescript } from "react-icons/si";
 import { gsap } from "gsap";
 import { profile, stats } from "@/lib/github-data";
@@ -13,10 +22,10 @@ const ROLES = [
 ];
 
 const PROOF = [
-  { v: stats.storesShipped, k: "Storefronts shipped" },
-  { v: stats.publishedApps, k: "Apps published" },
-  { v: stats.themesBuilt, k: "Custom themes" },
-  { v: stats.yearsExperience, k: "Years shipping" },
+  { v: stats.storesShipped, k: "Storefronts shipped", Icon: Store },
+  { v: stats.publishedApps, k: "Apps published", Icon: Rocket },
+  { v: stats.themesBuilt, k: "Custom themes", Icon: Palette },
+  { v: stats.yearsExperience, k: "Years shipping", Icon: CalendarDays },
 ];
 
 const STACK = [SiShopify, SiReact, SiNextdotjs, SiRemix, SiNodedotjs, SiMongodb, SiTypescript];
@@ -165,10 +174,10 @@ export function Hero() {
               designed, built and launched end to end.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+            <div className="mt-8 flex items-center gap-3">
               <a
                 href="#apps"
-                className="group inline-flex items-center gap-2 rounded-full bg-slate px-6 py-3.5 text-sm font-medium text-background transition-colors hover:bg-slate-deep"
+                className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-slate px-4 py-3.5 text-sm font-medium text-background transition-colors hover:bg-slate-deep sm:flex-none sm:px-6"
               >
                 See the work
                 <ArrowDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
@@ -178,7 +187,7 @@ export function Hero() {
                 onClick={cv.start}
                 disabled={cv.phase !== "idle"}
                 aria-live="polite"
-                className="group relative inline-flex min-w-[13rem] items-center justify-center gap-2 overflow-hidden rounded-full border border-border bg-card px-6 py-3.5 text-sm font-medium text-foreground transition-colors hover:border-slate disabled:cursor-default"
+                className="group relative inline-flex flex-1 items-center justify-center gap-2 overflow-hidden rounded-full border border-border bg-card px-4 py-3.5 text-sm font-medium text-foreground transition-colors hover:border-slate disabled:cursor-default sm:min-w-[13rem] sm:flex-none sm:px-6"
               >
                 {/* lime fill tracks the count */}
                 <span
@@ -195,13 +204,18 @@ export function Hero() {
                   {cv.phase === "idle" && "Download CV"}
                   {cv.phase === "loading" && (
                     <>
-                      Downloading
+                      <span className="hidden sm:inline">Downloading</span>
                       <span className="tabular-nums">
                         {String(cv.pct).padStart(2, "0")}%
                       </span>
                     </>
                   )}
-                  {cv.phase === "done" && "Saved — 100%"}
+                  {cv.phase === "done" && (
+                    <>
+                      Saved
+                      <span className="hidden sm:inline">— 100%</span>
+                    </>
+                  )}
                 </span>
               </button>
             </div>
@@ -251,10 +265,20 @@ export function Hero() {
 
         {/* ── Proof band ──────────────────────────────────────────── */}
         <div className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border md:mt-16 md:grid-cols-4">
-          {PROOF.map((s) => (
-            <div key={s.k} className="bg-card px-5 py-6">
-              <div className="font-display text-3xl text-foreground md:text-4xl">{s.v}</div>
-              <div className="mt-1.5 text-xs text-muted-foreground">{s.k}</div>
+          {PROOF.map(({ v, k, Icon }) => (
+            <div
+              key={k}
+              className="flex items-center gap-3 bg-card px-4 py-5 sm:gap-3.5 sm:px-5 sm:py-6"
+            >
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand/35 text-slate-deep">
+                <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+              </span>
+              <div className="min-w-0">
+                <div className="font-display text-2xl leading-none text-foreground md:text-3xl">
+                  {v}
+                </div>
+                <div className="mt-1.5 text-xs leading-snug text-muted-foreground">{k}</div>
+              </div>
             </div>
           ))}
         </div>
